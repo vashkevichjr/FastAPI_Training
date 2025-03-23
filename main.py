@@ -1,13 +1,24 @@
-from fastapi import FastAPI
+from typing import Optional, Annotated
 
+from fastapi import FastAPI
+from fastapi.params import Depends
+from pydantic import BaseModel
 app = FastAPI()
 
+class STaskAdd(BaseModel):
+    name: str
+    description: Optional[str] = None
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World, bro"}
+class STask(STaskAdd):
+    id: int
+
+tasks = []
+
+@app.post("/tasks")
+async def add_tasks(
+        task: Annotated[STaskAdd, Depends()]
+):
+    tasks.append(task)
+    return {"ok":True}
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
