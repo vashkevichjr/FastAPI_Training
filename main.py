@@ -7,25 +7,20 @@ from pydantic import BaseModel, ConfigDict
 from contextlib import asynccontextmanager
 
 from database import create_tables, delete_tables
+from schemas import STaskAdd
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await delete_tables()
+    print("База очищена")
     await create_tables()
     print("База готова")
     yield
-    await delete_tables()
-    print("База очищена")
+    print("База выключена")
+
 
 app = FastAPI(lifespan=lifespan)
-
-class STaskAdd(BaseModel):
-    name: str
-    description: str | None = None
-
-class STask(STaskAdd):
-    id: int
-    model_config = ConfigDict(from_attributes=True)
 
 tasks = []
 
