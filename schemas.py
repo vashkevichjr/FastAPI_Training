@@ -12,3 +12,4 @@ class STask(STaskAdd):
 class STaskId(BaseModel):
     ok: bool = True
     id: int
+    model_config = ConfigDict(from_attributes=True)

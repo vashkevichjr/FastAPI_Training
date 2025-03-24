@@ -13,7 +13,7 @@ router = APIRouter(
 @router.post("")
 async def add_tasks(
         task: Annotated[STaskAdd, Depends()]
-) -> dict[str, bool | int]:
+) -> STaskId:
     task_id = await TaskRepository.add_task(task)
     return {"ok":True, "task_id":task_id}
 
