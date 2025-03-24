@@ -1,9 +1,9 @@
-from typing import Annotated
+from typing import Annotated, Dict
 
 from fastapi import APIRouter, Depends
 
 from repository import TaskRepository
-from schemas import STaskAdd
+from schemas import STaskAdd, STask, STaskId
 
 router = APIRouter(
     prefix="/tasks",
@@ -13,12 +13,12 @@ router = APIRouter(
 @router.post("")
 async def add_tasks(
         task: Annotated[STaskAdd, Depends()]
-):
+) -> dict[str, bool | int]:
     task_id = await TaskRepository.add_task(task)
     return {"ok":True, "task_id":task_id}
 
 @router.get("")
-async def get_tasks():
+async def get_tasks() -> list[STask]:
     tasks = await TaskRepository.get_tasks()
     return tasks
 
